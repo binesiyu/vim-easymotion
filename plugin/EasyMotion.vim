@@ -238,7 +238,8 @@ xnoremap <silent><Plug>(easymotion-activate) :<C-u>call EasyMotion#activate(1)<C
 if g:EasyMotion_do_mapping == 1
     " Prepare Prefix: {{{
     if exists('g:EasyMotion_leader_key')
-        exec 'map ' . g:EasyMotion_leader_key . ' <Plug>(easymotion-prefix)'
+        exec 'nmap ' . g:EasyMotion_leader_key . ' <Plug>(easymotion-prefix)'
+        exec 'vmap ' . g:EasyMotion_leader_key . ' <Plug>(easymotion-prefix)'
     else
         if !hasmapto('<Plug>(easymotion-prefix)')
             map <Leader><Leader> <Plug>(easymotion-prefix)
@@ -251,14 +252,18 @@ if g:EasyMotion_do_mapping == 1
             " Mapping {{{
             if exists('g:EasyMotion_mapping_' . motion)
                 " Backward compatible mapping [deprecated]
-                silent exec 'map <silent> ' .
+                silent exec 'nmap <silent> ' .
+                    \ eval('g:EasyMotion_mapping_' . motion) . ' <Plug>(easymotion-' . motion . ')'
+                silent exec 'vmap <silent> ' .
                     \ eval('g:EasyMotion_mapping_' . motion) . ' <Plug>(easymotion-' . motion . ')'
             elseif a:do_mapping
                     \ && !hasmapto('<Plug>(easymotion-' . motion . ')')
                     \ && empty(maparg('<Plug>(easymotion-prefix)' . motion, 'nov'))
 
                 " Do mapping
-                silent exec 'map <silent> ' .
+                silent exec 'nmap <silent> ' .
+                    \'<Plug>(easymotion-prefix)' . motion . ' <Plug>(easymotion-' . motion . ')'
+                silent exec 'vmap <silent> ' .
                     \'<Plug>(easymotion-prefix)' . motion . ' <Plug>(easymotion-' . motion . ')'
             endif "}}}
         endfor
